@@ -1,209 +1,323 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="TODO: project description">
+  <meta name="keywords" content="TODO">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hybrid Systems Neural Control with Region-of-Attraction Planner</title>
 
-<script src="http://www.google.com/jsapi" type="text/javascript"></script>
-<script type="text/javascript">google.load("jquery", "1.3.2");</script>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
 
-<style type="text/css">
-  body {
-    font-family: "Titillium Web","HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
-    font-weight:300;
-    font-size:18px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 1100px;
-  }
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.png">
 
-  h1 {
-    font-weight:300;
-  }
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
 
-  .disclaimerbox {
-    background-color: #eee;
-    border: 1px solid #eeeeee;
-    border-radius: 10px ;
-    -moz-border-radius: 10px ;
-    -webkit-border-radius: 10px ;
-    padding: 20px;
-  }
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://realm.mit.edu">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
 
-  video.header-vid {
-    height: 140px;
-    border: 1px solid black;
-    border-radius: 10px ;
-    -moz-border-radius: 10px ;
-    -webkit-border-radius: 10px ;
-  }
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://realm.mit.edu">
+            REALM Website
+          </a>
+        </div>
+        <!-- <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://realm.mit.edu">
+            TODO: link to any other pages you want
+          </a>
+        </div> -->
+      </div>
+    </div>
 
-  img.header-img {
-    height: 140px;
-    border: 1px solid black;
-    border-radius: 10px ;
-    -moz-border-radius: 10px ;
-    -webkit-border-radius: 10px ;
-  }
-
-  img.rounded {
-    border: 1px solid #eeeeee;
-    border-radius: 10px ;
-    -moz-border-radius: 10px ;
-    -webkit-border-radius: 10px ;
-  }
-
-  a:link,a:visited
-  {
-    color: #1367a7;
-    text-decoration: none;
-  }
-  a:hover {
-    color: #208799;
-  }
-
-  td.dl-link {
-    height: 160px;
-    text-align: center;
-    font-size: 22px;
-  }
-
-  .layered-paper-big { /* modified from: http://css-tricks.com/snippets/css/layered-paper/ */
-    box-shadow:
-            0px 0px 1px 1px rgba(0,0,0,0.35), /* The top layer shadow */
-            5px 5px 0 0px #fff, /* The second layer */
-            5px 5px 1px 1px rgba(0,0,0,0.35), /* The second layer shadow */
-            10px 10px 0 0px #fff, /* The third layer */
-            10px 10px 1px 1px rgba(0,0,0,0.35), /* The third layer shadow */
-            15px 15px 0 0px #fff, /* The fourth layer */
-            15px 15px 1px 1px rgba(0,0,0,0.35), /* The fourth layer shadow */
-            20px 20px 0 0px #fff, /* The fifth layer */
-            20px 20px 1px 1px rgba(0,0,0,0.35), /* The fifth layer shadow */
-            25px 25px 0 0px #fff, /* The fifth layer */
-            25px 25px 1px 1px rgba(0,0,0,0.35); /* The fifth layer shadow */
-    margin-left: 10px;
-    margin-right: 45px;
-  }
+  </div>
+</nav>
 
 
-  .layered-paper { /* modified from: http://css-tricks.com/snippets/css/layered-paper/ */
-    box-shadow:
-            0px 0px 1px 1px rgba(0,0,0,0.35), /* The top layer shadow */
-            5px 5px 0 0px #fff, /* The second layer */
-            5px 5px 1px 1px rgba(0,0,0,0.35), /* The second layer shadow */
-            10px 10px 0 0px #fff, /* The third layer */
-            10px 10px 1px 1px rgba(0,0,0,0.35); /* The third layer shadow */
-    margin-top: 5px;
-    margin-left: 10px;
-    margin-right: 30px;
-    margin-bottom: 5px;
-  }
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Hybrid Systems Neural Control with Region-of-Attraction Planner</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://mengyuest.github.io/">Yue Meng</a>,</span>
+            <span class="author-block">
+              <a href="https://chuchu.mit.edu/">Chuchu Fan</a>,</span>
+          </div>
 
-  .vert-cent {
-    position: relative;
-      top: 50%;
-      transform: translateY(-50%);
-  }
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Massachusetts Institute of Technology</span>
+          </div>
 
-  hr
-  {
-    border: 0;
-    height: 1px;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
-  }
-</style>
-<!-- Start : Google Analytics Code -->
-<!-- <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-64069893-2', 'auto');
-  ga('send', 'pageview');
-</script> -->
-<!-- End : Google Analytics Code -->
-<script type="text/javascript" src="resources/hidebib.js"></script>
-<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,600,400italic,600italic,300,300italic' rel='stylesheet' type='text/css'>
-  <head>
-    <link rel="icon" type="image/png" href="resources/ucsd_logo.png">
-    <title>Hybrid Systems Neural Control with Region-of-Attraction Planner</title>
-    <meta property='og:title' content='Hybrid Systems Neural Control with Region-of-Attraction Planner' />
-    <meta property="og:description" content="Meng, Fan. Hybrid Systems Neural Control with Region-of-Attraction Planner." />
-    <meta property='og:url' content='https://mengyuest.github.io/nn_hybrid_clf_website/' />
-  </head>
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <!-- <span class="link-block">
+                <a href="https://arxiv.org/pdf/TODO.pdf"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span> -->
+              <!-- <span class="link-block">
+                <a href="https://arxiv.org/abs/TODO"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span> -->
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://youtu.be/TODO"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Supplementary Video</span>
+                </a>
+              </span> -->
+              <!-- <span class="link-block">
+                <a href="https://youtu.be/TODO"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Presentation Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <!-- <span class="link-block">
+                <a href="https://github.com/MIT-REALM/TODO"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span> -->
+              <span class="link-block">
+                <a href="static/appendix.pdf"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Supplementary</span>
+                </a>
+              </span>
+            </div>
 
-  <body>
-        <br>
-        <center><span style="font-size:40px;font-weight:bold;color:#182B49">Hybrid Systems Neural Control with Region-of-Attraction Planner</span></center>
-        <table align=center width=900px>
-          <tr>
-            <td align=center width=180px>
-            <center><span style="font-size:24px"><a href="https://mengyuest.github.io/" target="_blank">Yue Meng</a></span></center></td>
-        <td align=center width=150px>
-            <center><span style="font-size:24px"><a href="https://chuchu.mit.edu/" target="_blank"> Chuchu Fan</a></span></center></td>
-        <tr/>
-      </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <table align=center width=800px>
-          <tr>
-            <td align=center width=700px><center><span style="font-size:24px">MIT</span></center></td>
-          <tr/>
-         </table>
-        <br>
-      <hr>
-      <table align=center width=1000px>
-        <tr><td width=500px>
-          <center><img src = "resources/car_cmp_vis.png" height="400px"></img></a><br></center>
-        </td></tr>
-      </table>
-        <br>
-        <hr>
-        <center id="abstract"><h1>Abstract</h1></center>
-        Hybrid systems are prevalent in robotics. However, ensuring the stability of hybrid systems is challenging due to sophisticated continuous and discrete dynamics. A system with all its subsystems
-stable can still be unstable. Hence special treatments are required at mode switchings to stabilize the system. In this work, we propose a hierarchical, neural network (NN)-based method to con-
-trol general hybrid systems. For each subsystem mode, we first learn an NN Lyapunov function and an NN controller to ensure the states within the region of attraction (RoA) can be stabilized.
-Then an RoA NN estimator is learned across different modes. Upon mode switching, we propose a differentiable planner to ensure the states after switching can land in next mode’s RoA,
-hence stabilizing the hybrid system. We provide novel theoretical stability guarantees and conduct experiments in car tracking control, pogobot navigation, and bipedal walker locomotion. Our
-method only requires 0.25X of the training time as needed by other learning-based methods. With low running time (10∼50X faster than model predictive control (MPC)), our controller achieves a
-higher stability/success rate over other baselines such as MPC, reinforcement learning (RL), common Lyapunov methods (CLF), linear quadratic regulator (LQR), quadratic programming (QP) and
-Hamilton-Jacobian-based methods (HJB).
-        <br>
-        <hr>
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="./static/images/roa_teaser_v1.png"
+        class="center-image"
+        alt="TODO: alt text"/>
+      <h2 class="subtitle has-text-centered">
+        <br/>
+        Learn to stablize hybrid systems using an RoA based approach.
+      </h2>
+    </div>
+  </div>
+</section>
 
-        <!-- <center id="results0"><h1>State density estimation</h1></center>
-        Our approach (NN) achieves 99% reduction in KL divergence!
-        <table align=center width=1000px>
-            <tr><td width=500px>
-              <center><img src = "resources/fig3_density.png" height="250px"></img></a><br></center>
-            </td></tr>
-          </table>
-        <br>
-        <hr> -->
-        
-        <center id="supplmentary"><h1><a href="appendix.pdf" target="_blank">Supplementary Material</a></h1></center>
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Paper video. -->
+    <!-- <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/TODO?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Paper video. -->
 
-        <!-- <center id="sourceCode"><h1>Paper and Code</h1></center>
-        <table align=center width=900px>
-          <tr>
-            <td>
-            <a href="https://github.com/mengyuest/nn_hybrid_clf_website"><img class="paperpreview" src="resources/fig1_arch.png" width="200px"/></a>
-            </td>
-          <td width=700px > <span style="font-size:20px">
-              Yue Meng and Chuchu Fan. <br/> <a href="https://mengyuest.github.io/nn_hybrid_clf_website">Learning Density Distribution of Reachable States for Autonomous Systems</a> <br/> <i>Conference on Robot Learning (CoRL)</i>, 2021 <br/>[<a href="https://arxiv.org/pdf/2109.06728.pdf">PDF</a>][<a href="https://github.com/mengyuest/nn_hybrid_clf_website">Code</a>][<a href="resources/CoRL2021_poster_Page_02_resized2.png" target="_blank">Poster</a>]</span>
-        </td>
-        </tr>
-      </table>
-      <br>
-      <hr> -->
-      <!-- <center id="results1"><h1>This work is from REALM lab</h1></center>
-        <table align=center width=1000px>
-            <tr><td width=500px>
-              <center><a href="https://realm.mit.edu" target="_blank"><img src = "resources/REALM-Logo.png" height="300px"></img></a><br></center>
-            </td></tr>
-          </table>
-          <br>
-          <hr> -->
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Hybrid systems are prevalent in robotics. However, ensuring the stability of hybrid systems is challenging due to sophisticated continuous and discrete dynamics. A system with all its subsystems stable can still be unstable. Hence special treatments are required at mode switchings to stabilize the system. In this work, we propose a hierarchical, neural network (NN)-based method to control general hybrid systems. For each subsystem mode, we first learn an NN Lyapunov function and an NN controller to ensure the states within the region of attraction (RoA) can be stabilized. Then an RoA NN estimator is learned across different modes. Upon mode switching, we propose a differentiable planner to ensure the states after switching can land in next mode's RoA, hence stabilizing the hybrid system. We provide novel theoretical stability guarantees and conduct experiments in car tracking control, pogobot navigation, and bipedal walker locomotion. Our method only requires 0.25X of the training time as needed by other learning-based methods. With low running time (10~50X faster than model predictive control (MPC)), our controller achieves a higher stability/success rate over other baselines such as MPC, reinforcement learning (RL), common Lyapunov methods (CLF), linear quadratic regulator (LQR), quadratic programming (QP) and Hamilton-Jacobian-based methods (HJB).
+          </p>
+          <!-- <p>
+            TODO: paragraph 2
+          </p> -->
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
 
-      <br/>
-<script xml:space="preserve" language="JavaScript">
-hideallbibs();
-</script>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <!-- TODO: Main point 1 -->
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-3">Better results than RL</h2>
+          <img src="./static/images/env_demo.png"
+            class="center-image simulation-image"
+            alt="TODO: alt text"/>
+        </div>
+      </div>
+      <!--/ TODO: Main point 1 -->
+    </div>
+
+      <!-- TODO: Main point 2 -->
+      <div class="columns is-centered">
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-3">Stable tracking control</h2>
+          <img src="./static/images/car_cmp_vis.png"
+            class="center-image simulation-image"
+            alt="TODO: alt text"/>
+        </div>
+      </div>
+    </div>
+    <div class="columns is-centered">
+      <!--/ TODO: Main point 2 -->
+
+      <!-- TODO: Main point 3 -->
+      <!-- <div class="column">
+        <div class="content">
+          <h2 class="title is-3">TODO: main point 3</h2>
+          <img src="./static/images/TODO.png"
+            class="center-image simulation-image"
+            alt="TODO: alt text"/>
+        </div>
+      </div> -->
+      <!--/ TODO: Main point 3 -->
+
+
+    <!-- Concurrent Work. -->
+    <!-- <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Related Links</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            This work is part of a broader research thread around <emph>TODO</emph>, which allow us to TODO. TODO: e.g. For a survey of the field of learned certificates, see <a rel="survey" href="https://arxiv.org/pdf/2202.11762.pdf">this paper</a>.
+          </p>
+          <p>
+            Other work on TODO from our lab include:
+            <ul>
+              <li><a href="TODO.mit.edu">example 1</a>.</li>
+            </ul>
+          </p>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Concurrent Work. -->
+
+    <div class="columns is-centered">
+      <div class="column">
+        <div class="content">
+          <h2 class="title is-3"><a href="static/appendix.pdf">Supplementary</a></h2>
+        </div>
+      </div>
+    </div>
+    <div class="columns is-centered">
+
+  </div>
+</section>
+
+<!-- <section class="section">
+  <div class="columns is-centered">
+  <a href="static/appendix.pdf">
+    <span>Supplementary</span>
+  </a>
+</div>
+</section> -->
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{TODO,
+author={TODO, TODO and TODO, TODO},
+journal={TODO},
+title={TODO},
+year={TODO},
+volume={TODO},
+number={TODO},
+pages={TODO},
+doi={TODO}}
+}</code></pre>
+  </div>
+</section> -->
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+            This webpage template is based that used by <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>. 
+            We sincerely thank <a href="https://keunhong.com/">Keunhong Park</a> for developing and open-sourcing this template.
+          </p>
+        </div>
+      </div>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
 </body>
 </html>
